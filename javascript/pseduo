@@ -1,0 +1,30 @@
+DOCUMENT
+
+https://localhost:3000/lps/1
+
+lp -  Original Pirate Material
+
+form (username, rating, comment)
+done button
+
+onclick POST request 
+body {
+    username = HK,
+    rating = 5/5,
+    comment = ......
+}
+
+---------------------
+
+lps routes File
+
+router.post(":id/submitReview", (req, res)=>{
+    let id = req.params.id
+    let { user, rating, comment } = req.body
+    let obj = RO.allLPs.get(id)
+    obj.addReview(user, rating, comment)
+})
+
+
+
+
