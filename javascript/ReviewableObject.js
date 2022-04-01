@@ -11,13 +11,13 @@ module.exports = class ReviewableObject{
         AllEPsOnDB = ReviewableObject.db.prepare("SELECT * FROM eps;").all()
         AllSinglesOnDB = ReviewableObject.db.prepare("SELECT * FROM singles;").all()
         for(let x of AllLPsOnDB){
-            new ReviewableObject(x.title, x.artist, x.releaseDate, x.genre, "lp")
+            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "lp")
         }
         for(let x of AllEPsOnDB){
-            new ReviewableObject(x.title, x.artist, x.releaseDate, x.genre, "ep")
+            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "ep")
         }
         for(let x of AllSinglesOnDB){
-            new ReviewableObject(x.title, x.artist, x.releaseDate, x.genre, "single")
+            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "single")
         }
     }
 
@@ -29,9 +29,9 @@ module.exports = class ReviewableObject{
     static getAllEpReviews = ReviewableObject.db.prepare("SELECT * FROM epsR;")
     static getAllSingleReviews = ReviewableObject.db.prepare("SELECT * FROM singlesR;")
 
-    static getOneLpReview = ReviewableObject.db.prepare("SELECT * FROM lpsR WHERE rowid = ?;")
-    static getOneEpReview = ReviewableObject.db.prepare("SELECT * FROM epsR WHERE rowid = ?;")
-    static getOneSingleReview = ReviewableObject.db.prepare("SELECT * FROM singlesR WHERE rowid = ?;")
+    static getOneLpReviews = ReviewableObject.db.prepare("SELECT * FROM lpsR WHERE rowid = ?;")
+    static getOneEpReviews = ReviewableObject.db.prepare("SELECT * FROM epsR WHERE rowid = ?;")
+    static getOneSingleReviews = ReviewableObject.db.prepare("SELECT * FROM singlesR WHERE rowid = ?;")
     
     static lpGetID = ReviewableObject.db.prepare("SELECT rowid FROM lps WHERE artist = ?, title = ?, releaseDate = ?;")
     static epGetID = ReviewableObject.db.prepare("SELECT rowid FROM eps WHERE artist = ?, title = ?, releaseDate = ?;")
@@ -49,28 +49,30 @@ module.exports = class ReviewableObject{
     static updateEP = ReviewableObject.db.prepare("UPDATE eps SET avgScore = ?, numReviews = ? WHERE rowid = ?;")
     static updateSingles = ReviewableObject.db.prepare("UPDATE singles SET avgScore = ?, numReviews = ? WHERE rowid = ?;")
     
-    constructor(title, artist, releaseDate, genre, type){
+    constructor(title, artist, releaseDate, description, artURL, genre, type){
         this.title = title
         this.artist = artist
         this.releaseDate = releaseDate
         this.genre = genre
         this.numReviews = 0
         this.avgScore = 0
+        this.description = description
+        this.artURL = artURL
         this.type = type
 
         switch (this.type){
             case "lp":
-                ReviewableObject.insertLP.run(this.title, this.artist, this.releaseDate, this.genre, this.avgScore, this.numReviews)
+                ReviewableObject.insertLP.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.avgScore, this.numReviews)
                 this.dbID = ReviewableObject.lpGetID.run(this.artist, this.title, this.releaseDate)
                 ReviewableObject.allLPs.set(this.dbID, this)
                 break
             case "ep":
-                ReviewableObject.insertEP.run(this.title, this.artist, this.releaseDate, this.genre, this.avgScore, this.numReviews)
+                ReviewableObject.insertEP.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.avgScore, this.numReviews)
                 this.dbID = ReviewableObject.epGetID.run(this.artist, this.title, this.releaseDate)
                 ReviewableObject.allEPs.set(this.dbID, this)
                 break
             case "single":
-                ReviewableObject.insertSingle.run(this.title, this.artist, this.releaseDate, this.genre, this.avgScore, this.numReviews)
+                ReviewableObject.insertSingle.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.avgScore, this.numReviews)
                 this.dbID = ReviewableObject.singlesGetID.run(this.artist, this.title, this.releaseDate)
                 ReviewableObject.allSingles.set(this.dbID, this)
                 break 
