@@ -11,13 +11,13 @@ module.exports = class ReviewableObject{
         AllEPsOnDB = ReviewableObject.db.prepare("SELECT * FROM eps;").all()
         AllSinglesOnDB = ReviewableObject.db.prepare("SELECT * FROM singles;").all()
         for(let x of AllLPsOnDB){
-            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "lp")
+            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "lp", x.spotifyLink, x.avgScore, x.numReviews)
         }
         for(let x of AllEPsOnDB){
-            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "ep")
+            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "ep", x.spotifyLink, x.avgScore, x.numReviews)
         }
         for(let x of AllSinglesOnDB){
-            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "single")
+            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "single", x.spotifyLink, x.avgScore, x.numReviews)
         }
     }
     static topLPs = ReviewableObject.db.prepare("SELECT * FROM lps WHERE avgReview > 4 LIMIT ? DESC;")
@@ -56,17 +56,17 @@ module.exports = class ReviewableObject{
     static updateEP = ReviewableObject.db.prepare("UPDATE eps SET avgScore = ?, numReviews = ? WHERE rowid = ?;")
     static updateSingles = ReviewableObject.db.prepare("UPDATE singles SET avgScore = ?, numReviews = ? WHERE rowid = ?;")
     
-    constructor(title, artist, releaseDate, description, artURL, genre, type, spotifyLink){
+    constructor(title, artist, releaseDate, description, artURL, genre, type, spotifyLink, avgScore, numReviews){
         this.title = title
         this.artist = artist
         this.releaseDate = releaseDate
-        this.genre = genre
-        this.numReviews = 0
-        this.avgScore = 0
         this.description = description
         this.artURL = artURL
-        this.spotifyLink = spotifyLink
+        this.genre = genre
         this.type = type
+        this.spotifyLink = spotifyLink
+        this.numReviews = numReviews
+        this.avgScore = avgScore
 
         switch (this.type){
             case "lp":
