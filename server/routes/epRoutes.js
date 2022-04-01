@@ -8,6 +8,11 @@ router.get("/", async (req, res)=>{
     let returnObj = returnObjFromMap(ReviewableObject.allEPs)
     res.send(returnObj)
 })
+router.post("/", async (req, res)=>{
+    let { title, artist, releaseDate, description, artURL, genre, spotifyLink } = req.body
+    new ReviewableObject(title, artist, releaseDate, description, artURL, genre, "ep", spotifyLink, 0, 0)
+    res.sendStatus(201)
+})
 router.get("/:id", async (req, res)=>{
     let id = Number(req.params.id)
     let returnObj = ReviewableObject.allEPs.get(id)
