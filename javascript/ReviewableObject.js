@@ -20,6 +20,9 @@ module.exports = class ReviewableObject{
             new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "single")
         }
     }
+    static topLPs = ReviewableObject.db.prepare("SELECT * FROM lps WHERE avgReview > 4 LIMIT ? DESC;")
+    static topEPs = ReviewableObject.db.prepare("SELECT * FROM eps WHERE avgReview > 4 LIMIT ? DESC;")
+    static topSingles = ReviewableObject.db.prepare("SELECT * FROM singles WHERE avgReview > 4 LIMIT ? DESC;")
 
     static getGenreLPs = ReviewableObject.db.prepare("SELECT * FROM lps WHERE genre = ?;")
     static getGenreEPs = ReviewableObject.db.prepare("SELECT * FROM eps WHERE genre = ?;")
