@@ -20,17 +20,17 @@ module.exports = class ReviewableObject{
             new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "single", x.spotifyLink, x.avgScore, x.numReviews)
         }
     }
-    static topLPs = ReviewableObject.db.prepare("SELECT * FROM lps WHERE avgReview > 4 LIMIT ? DESC;")
-    static topEPs = ReviewableObject.db.prepare("SELECT * FROM eps WHERE avgReview > 4 LIMIT ? DESC;")
-    static topSingles = ReviewableObject.db.prepare("SELECT * FROM singles WHERE avgReview > 4 LIMIT ? DESC;")
+    static topLPs = ReviewableObject.db.prepare("SELECT * FROM lps WHERE avgScore > 4 LIMIT ?;")
+    static topEPs = ReviewableObject.db.prepare("SELECT * FROM eps WHERE avgScore > 4 LIMIT ?;")
+    static topSingles = ReviewableObject.db.prepare("SELECT * FROM singles WHERE avgScore > 4 LIMIT ?;")
 
     static getGenreLPs = ReviewableObject.db.prepare("SELECT * FROM lps WHERE genre = ?;")
     static getGenreEPs = ReviewableObject.db.prepare("SELECT * FROM eps WHERE genre = ?;")
     static getGenreSingles = ReviewableObject.db.prepare("SELECT * FROM singles WHERE genre = ?;")
 
-    static topLPsFromGenre = ReviewableObject.db.prepare("SELECT * from lps WHERE genre = ? AND avgReviews > 4 LIMIT ?;")
-    static topEPsFromGenre = ReviewableObject.db.prepare("SELECT * from eps WHERE genre = ? AND avgReviews > 4 LIMIT ?;")
-    static topSinglesFromGenre = ReviewableObject.db.prepare("SELECT * from singles WHERE genre = ? AND avgReviews > 4 LIMIT ?;")
+    static topLPsFromGenre = ReviewableObject.db.prepare("SELECT * from lps WHERE genre = ? AND avgScore > 4 LIMIT ?;")
+    static topEPsFromGenre = ReviewableObject.db.prepare("SELECT * from eps WHERE genre = ? AND avgScore > 4 LIMIT ?;")
+    static topSinglesFromGenre = ReviewableObject.db.prepare("SELECT * from singles WHERE genre = ? AND avgScore > 4 LIMIT ?;")
 
     static getAllLpReviews = ReviewableObject.db.prepare("SELECT * FROM lpsR;")
     static getAllEpReviews = ReviewableObject.db.prepare("SELECT * FROM epsR;")
