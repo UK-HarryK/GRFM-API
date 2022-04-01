@@ -16,3 +16,16 @@ router.get("/:genre", async (req, res)=>{
     }
     res.send(returnObj)
 })
+router.get("/:genre/:limit", async (req, res)=>{
+    let genre = req.params.genre
+    let limit = req.params.limit
+    let lps = ReviewableObject.topLPsFromGenre.all(genre, limit)
+    let eps = ReviewableObject.topEPsFromGenre.all(genre, limit)
+    let singles = ReviewableObject.topSinglesFromGenre.all(genre, limit)
+    let returnObj = {
+        "lps": lps,
+        "eps": eps,
+        "singles": singles
+    }
+    res.send(returnObj)
+})
