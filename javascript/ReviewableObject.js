@@ -7,9 +7,9 @@ module.exports = class ReviewableObject{
     static allSingles = new Map()
 
     static bootup = function(){
-        AllLPsOnDB = ReviewableObject.db.prepare("SELECT * FROM lps;").all()
-        AllEPsOnDB = ReviewableObject.db.prepare("SELECT * FROM eps;").all()
-        AllSinglesOnDB = ReviewableObject.db.prepare("SELECT * FROM singles;").all()
+        let AllLPsOnDB = ReviewableObject.db.prepare("SELECT * FROM lps;").all()
+        let AllEPsOnDB = ReviewableObject.db.prepare("SELECT * FROM eps;").all()
+        let AllSinglesOnDB = ReviewableObject.db.prepare("SELECT * FROM singles;").all()
         for(let x of AllLPsOnDB){
             new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "lp", x.spotifyLink, x.avgScore, x.numReviews)
         }
@@ -44,9 +44,9 @@ module.exports = class ReviewableObject{
     static epGetID = ReviewableObject.db.prepare("SELECT rowid FROM eps WHERE artist = ? AND title = ? AND releaseDate = ?;")
     static singlesGetID = ReviewableObject.db.prepare("SELECT rowid FROM singles WHERE artist = ? AND title = ? AND releaseDate = ?;")
     
-    static insertLP = ReviewableObject.db.prepare("INSERT OR IGNORE INTO lps (title, artist, releaseDate, description, artURL, genre, spotifyLink, avgScore, numReviews) VALUES (?, ?, ?, ?, ?, ?);")
-    static insertEP = ReviewableObject.db.prepare("INSERT OR IGNORE INTO eps (title, artist, releaseDate, description, artURL, genre, spotifyLink, avgScore, numReviews) VALUES (?, ?, ?, ?, ?, ?);")
-    static insertSingle = ReviewableObject.db.prepare("INSERT OR IGNORE INTO singles (title, artist, releaseDate, description, artURL, genre, spotifyLink, avgScore, numReviews) VALUES (?, ?, ?, ?, ?, ?);")
+    static insertLP = ReviewableObject.db.prepare("INSERT OR IGNORE INTO lps (title, artist, releaseDate, description, artURL, genre, spotifyLink, avgScore, numReviews) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);")
+    static insertEP = ReviewableObject.db.prepare("INSERT OR IGNORE INTO eps (title, artist, releaseDate, description, artURL, genre, spotifyLink, avgScore, numReviews) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);")
+    static insertSingle = ReviewableObject.db.prepare("INSERT OR IGNORE INTO singles (title, artist, releaseDate, description, artURL, genre, spotifyLink, avgScore, numReviews) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);")
     
     static insertLpReview = ReviewableObject.db.prepare("INSERT OR IGNORE INTO lpsR (user, score, commentStr, relativeID) VALUES (?, ?, ?, ?);")
     static insertEpReview = ReviewableObject.db.prepare("INSERT OR IGNORE INTO epsR (user, score, commentStr, relativeID) VALUES (?, ?, ?, ?);")
