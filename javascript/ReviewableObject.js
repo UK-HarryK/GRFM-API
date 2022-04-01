@@ -10,14 +10,20 @@ module.exports = class ReviewableObject{
         let AllLPsOnDB = ReviewableObject.db.prepare("SELECT * FROM lps;").all()
         let AllEPsOnDB = ReviewableObject.db.prepare("SELECT * FROM eps;").all()
         let AllSinglesOnDB = ReviewableObject.db.prepare("SELECT * FROM singles;").all()
-        for(let x of AllLPsOnDB){
-            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "lp", x.spotifyLink, x.avgScore, x.numReviews)
+        if(AllLPsOnDB[0] != undefined){
+            for(let x of AllLPsOnDB){
+                new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "lp", x.spotifyLink, x.avgScore, x.numReviews, false)
+            }
         }
-        for(let x of AllEPsOnDB){
-            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "ep", x.spotifyLink, x.avgScore, x.numReviews)
+        if(AllEPsOnDB[0] != undefined){
+            for(let x of AllEPsOnDB){
+                new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "ep", x.spotifyLink, x.avgScore, x.numReviews, false)
+            }
         }
-        for(let x of AllSinglesOnDB){
-            new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "single", x.spotifyLink, x.avgScore, x.numReviews)
+        if(AllSinglesOnDB != undefined){
+            for(let x of AllSinglesOnDB){
+                new ReviewableObject(x.title, x.artist, x.releaseDate, x.description, x.artURL, x.genre, "single", x.spotifyLink, x.avgScore, x.numReviews, false)
+            }
         }
     }
     static topLPs = ReviewableObject.db.prepare("SELECT * FROM lps WHERE avgScore > 4 LIMIT ?;")
@@ -56,7 +62,7 @@ module.exports = class ReviewableObject{
     static updateEP = ReviewableObject.db.prepare("UPDATE eps SET avgScore = ?, numReviews = ? WHERE rowid = ?;")
     static updateSingles = ReviewableObject.db.prepare("UPDATE singles SET avgScore = ?, numReviews = ? WHERE rowid = ?;")
     
-    constructor(title, artist, releaseDate, description, artURL, genre, type, spotifyLink, avgScore, numReviews){
+    constructor(title, artist, releaseDate, description, artURL, genre, type, spotifyLink, avgScore, numReviews, newObject){
         this.title = title
         this.artist = artist
         this.releaseDate = releaseDate
@@ -67,24 +73,49 @@ module.exports = class ReviewableObject{
         this.spotifyLink = spotifyLink
         this.numReviews = numReviews
         this.avgScore = avgScore
+        this.dbID
+        if(newObject){
+            this.newObjectWrite()
+        }else{
+            this.oldObjectReform()
+        }
+    }
 
+    async newObjectWrite(){
         switch (this.type){
             case "lp":
                 ReviewableObject.insertLP.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.spotifyLink, this.avgScore, this.numReviews)
-                this.dbID = ReviewableObject.lpGetID.run(this.artist, this.title, this.releaseDate)
+                this.dbID = ReviewableObject.lpGetID.get(this.artist, this.title, this.releaseDate).rowid
                 ReviewableObject.allLPs.set(this.dbID, this)
                 break
             case "ep":
                 ReviewableObject.insertEP.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.spotifyLink, this.avgScore, this.numReviews)
-                this.dbID = ReviewableObject.epGetID.run(this.artist, this.title, this.releaseDate)
+                this.dbID = ReviewableObject.epGetID.get(this.artist, this.title, this.releaseDate).rowid
                 ReviewableObject.allEPs.set(this.dbID, this)
                 break
             case "single":
                 ReviewableObject.insertSingle.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.spotifyLink, this.avgScore, this.numReviews)
-                this.dbID = ReviewableObject.singlesGetID.run(this.artist, this.title, this.releaseDate)
+                this.dbID = ReviewableObject.singlesGetID.get(this.artist, this.title, this.releaseDate).rowid
                 ReviewableObject.allSingles.set(this.dbID, this)
                 break 
-            }
+        }
+    }
+
+    async oldObjectReform(){
+        switch (this.type){
+            case "lp":
+                this.dbID = ReviewableObject.lpGetID.get(this.artist, this.title, this.releaseDate).rowid
+                ReviewableObject.allLPs.set(this.dbID, this)
+                break
+            case "ep":
+                this.dbID = ReviewableObject.epGetID.get(this.artist, this.title, this.releaseDate).rowid
+                ReviewableObject.allEPs.set(this.dbID, this)
+                break
+            case "single":
+                this.dbID = ReviewableObject.singlesGetID.get(this.artist, this.title, this.releaseDate).rowid
+                ReviewableObject.allSingles.set(this.dbID, this)
+                break 
+        }
     }
 
     async addReview(score, comment, user){
@@ -93,15 +124,15 @@ module.exports = class ReviewableObject{
         switch (this.type){
             case "lp":
                 ReviewableObject.insertLpReview.run(user, score, comment, this.dbID)
-                ReviewableObject.updateLP(this.avgScore, this.numReviews, this.dbID)
+                ReviewableObject.updateLP.run(this.avgScore, this.numReviews, this.dbID)
                 break
             case "ep":
                 ReviewableObject.insertEpReview.run(user, score, comment, this.dbID)
-                ReviewableObject.updateEP(this.avgScore, this.numReviews, this.dbID)
+                ReviewableObject.updateEP.run(this.avgScore, this.numReviews, this.dbID)
                 break
             case "single":
                 ReviewableObject.insertSinglesReview.run(user, score, comment, this.dbID)
-                ReviewableObject.updateSingles(this.avgScore, this.numReviews, this.dbID)
+                ReviewableObject.updateSingles.run(this.avgScore, this.numReviews, this.dbID)
                 break
         }
     }
