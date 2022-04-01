@@ -56,7 +56,7 @@ module.exports = class ReviewableObject{
     static updateEP = ReviewableObject.db.prepare("UPDATE eps SET avgScore = ?, numReviews = ? WHERE rowid = ?;")
     static updateSingles = ReviewableObject.db.prepare("UPDATE singles SET avgScore = ?, numReviews = ? WHERE rowid = ?;")
     
-    constructor(title, artist, releaseDate, description, artURL, genre, type){
+    constructor(title, artist, releaseDate, description, artURL, genre, type, spotifyLink){
         this.title = title
         this.artist = artist
         this.releaseDate = releaseDate
@@ -65,7 +65,7 @@ module.exports = class ReviewableObject{
         this.avgScore = 0
         this.description = description
         this.artURL = artURL
-        this.spotifyLink
+        this.spotifyLink = spotifyLink
         this.type = type
 
         switch (this.type){
