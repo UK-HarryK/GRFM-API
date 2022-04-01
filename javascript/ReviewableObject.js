@@ -65,21 +65,22 @@ module.exports = class ReviewableObject{
         this.avgScore = 0
         this.description = description
         this.artURL = artURL
+        this.spotifyLink
         this.type = type
 
         switch (this.type){
             case "lp":
-                ReviewableObject.insertLP.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.avgScore, this.numReviews)
+                ReviewableObject.insertLP.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.spotifyLink, this.avgScore, this.numReviews)
                 this.dbID = ReviewableObject.lpGetID.run(this.artist, this.title, this.releaseDate)
                 ReviewableObject.allLPs.set(this.dbID, this)
                 break
             case "ep":
-                ReviewableObject.insertEP.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.avgScore, this.numReviews)
+                ReviewableObject.insertEP.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.spotifyLink, this.avgScore, this.numReviews)
                 this.dbID = ReviewableObject.epGetID.run(this.artist, this.title, this.releaseDate)
                 ReviewableObject.allEPs.set(this.dbID, this)
                 break
             case "single":
-                ReviewableObject.insertSingle.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.avgScore, this.numReviews)
+                ReviewableObject.insertSingle.run(this.title, this.artist, this.releaseDate, this.description, this.artURL, this.genre, this.spotifyLink, this.avgScore, this.numReviews)
                 this.dbID = ReviewableObject.singlesGetID.run(this.artist, this.title, this.releaseDate)
                 ReviewableObject.allSingles.set(this.dbID, this)
                 break 
