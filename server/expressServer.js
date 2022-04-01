@@ -12,7 +12,7 @@ app.use(express.urlencoded({extended: true}))
 app.use("/lps", lpRoutes)
 app.use("/eps", epRoutes)
 app.use("/singles", singlesRoutes)
-app.use("/genres", genreRoutes)
+//app.use("/genres", genreRoutes)
 app.listen(port, async ()=>{
     ReviewableObject.bootup()
 })
