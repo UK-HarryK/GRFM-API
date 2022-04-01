@@ -35,3 +35,4 @@ router.get("/:id/reviews", async (req, res)=>{
     let allReviews = ReviewableObject.getOneLpReviews.all(id)
     res.send(allReviews)
 })
+module.exports = router

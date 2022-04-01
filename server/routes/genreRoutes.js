@@ -29,3 +29,4 @@ router.get("/:genre/:limit", async (req, res)=>{
     }
     res.send(returnObj)
 })
+module.export = router
