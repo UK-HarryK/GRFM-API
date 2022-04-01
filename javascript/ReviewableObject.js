@@ -33,9 +33,9 @@ module.exports = class ReviewableObject{
     static getOneEpReviews = ReviewableObject.db.prepare("SELECT * FROM epsR WHERE rowid = ?;")
     static getOneSingleReviews = ReviewableObject.db.prepare("SELECT * FROM singlesR WHERE rowid = ?;")
     
-    static lpGetID = ReviewableObject.db.prepare("SELECT rowid FROM lps WHERE artist = ?, title = ?, releaseDate = ?;")
-    static epGetID = ReviewableObject.db.prepare("SELECT rowid FROM eps WHERE artist = ?, title = ?, releaseDate = ?;")
-    static singlesGetID = ReviewableObject.db.prepare("SELECT rowid FROM singles WHERE artist = ?, title = ?, releaseDate = ?;")
+    static lpGetID = ReviewableObject.db.prepare("SELECT rowid FROM lps WHERE artist = ? AND title = ? AND releaseDate = ?;")
+    static epGetID = ReviewableObject.db.prepare("SELECT rowid FROM eps WHERE artist = ? AND title = ? AND releaseDate = ?;")
+    static singlesGetID = ReviewableObject.db.prepare("SELECT rowid FROM singles WHERE artist = ? AND title = ? AND releaseDate = ?;")
     
     static insertLP = ReviewableObject.db.prepare("INSERT OR IGNORE INTO lps (title, artist, releaseDate, genre, avgScore, numReviews) VALUES (?, ?, ?, ?, ?, ?);")
     static insertEP = ReviewableObject.db.prepare("INSERT OR IGNORE INTO eps (title, artist, releaseDate, genre, avgScore, numReviews) VALUES (?, ?, ?, ?, ?, ?);")
