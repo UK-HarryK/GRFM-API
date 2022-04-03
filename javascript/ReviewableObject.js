@@ -74,6 +74,7 @@ module.exports = class ReviewableObject{
         this.numReviews = numReviews
         this.avgScore = avgScore
         this.dbID
+//        this.topComments = new Map()
         if(newObject){
             this.newObjectWrite()
         }else{
